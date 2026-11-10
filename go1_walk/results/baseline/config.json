@@ -1,0 +1,15 @@
+{
+  "seed": 42,
+  "requested_rollouts": 2048,
+  "actual_rollouts": 2048,
+  "sim_seconds_per_rollout": 5.0,
+  "mode": "baseline",
+  "wall_time_s": 193.598317861557,
+  "algorithm": "PPO; one action per episode; gamma=0; six gait parameters",
+  "validation_seeds": [
+    900,
+    901,
+    902
+  ],
+  "target_speed_m_s": 0.25
+}

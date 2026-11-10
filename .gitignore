@@ -1,0 +1,5 @@
+__pycache__/
+*.py[cod]
+.venv/
+go1_walk/**/monitor.csv
+*.pptx
