@@ -10,16 +10,16 @@ import torch
 from stable_baselines3 import PPO
 from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.monitor import Monitor
-from .env import Go1GaitEnv, decode, PARAMETERS
+from .env import Go1GaitEnv, decode, PARAMETERS, controller_options
 
 
 class Progress(BaseCallback):
-    def __init__(self, directory, mode, validation_every=64):
+    def __init__(self, directory, mode, validation_every=64, actuator_kv=0.):
         super().__init__()
         self.directory, self.mode = directory, mode
         self.rows = []
         self.best = -float("inf")
-        self.eval_env = Go1GaitEnv(mode)
+        self.eval_env = Go1GaitEnv(mode, actuator_kv=actuator_kv)
         self.validation_every = validation_every
         self.validation_rows = []
 
@@ -78,6 +78,7 @@ def main():
     parser.add_argument("--output", type=Path, default=Path("go1_walk/results"))
     parser.add_argument("--backend", choices=["cpu", "warp"], default="cpu")
     parser.add_argument("--num-envs", type=int, default=64, help="Parallel CUDA worlds for --backend warp")
+    parser.add_argument("--actuator-kv", type=float, help="Servo damping (N m s/rad); defaults to resumed config, or 0 for a new policy")
     parser.add_argument("--resume", type=Path, help="Continue from a PPO checkpoint, retaining optimizer state")
     parser.add_argument("--learning-rate", type=float, default=.003)
     parser.add_argument("--validation-every", type=int, default=64)
@@ -86,6 +87,10 @@ def main():
         parser.error("steps, validation-every and learning-rate must be positive")
     if args.resume and args.mode == "both":
         parser.error("Choose the checkpoint's --mode when using --resume")
+    if args.actuator_kv is None:
+        args.actuator_kv = controller_options(args.resume)['actuator_kv'] if args.resume else 0.
+    if not np.isfinite(args.actuator_kv) or args.actuator_kv < 0:
+        parser.error("actuator-kv must be finite and nonnegative")
     torch.set_num_threads(1)
     for mode in (["baseline", "improved"] if args.mode == "both" else [args.mode]):
         directory = args.output / mode
@@ -94,10 +99,10 @@ def main():
         directory.mkdir(parents=True, exist_ok=True)
         if args.backend == "warp":
             from .warp_env import WarpGo1VecEnv
-            env = WarpGo1VecEnv(args.num_envs, mode, seed=args.seed)
+            env = WarpGo1VecEnv(args.num_envs, mode, seed=args.seed, actuator_kv=args.actuator_kv)
             n_steps = max(1, int(np.ceil(64 / args.num_envs)))
         else:
-            env = Monitor(Go1GaitEnv(mode), str(directory / "monitor.csv"))
+            env = Monitor(Go1GaitEnv(mode, actuator_kv=args.actuator_kv), str(directory / "monitor.csv"))
             n_steps = 64
         if args.resume:
             model = PPO.load(args.resume, env=env, device="cpu", seed=args.seed,
@@ -110,12 +115,14 @@ def main():
         previous_rollouts = model.num_timesteps
         started = time.time()
         model.learn(args.steps, reset_num_timesteps=not bool(args.resume),
-                    callback=Progress(directory, mode, args.validation_every))
+                    callback=Progress(directory, mode, args.validation_every, args.actuator_kv))
         model.save(directory / "final")
         (directory / "config.json").write_text(json.dumps({
             "seed": args.seed, "requested_rollouts": args.steps,
             "backend": args.backend, "physics_device": "cuda:0" if args.backend == "warp" else "cpu",
             "policy_device": "cpu", "validation_backend": "cpu",
+            "actuator_kv": args.actuator_kv,
+            "actuator_kp": 100., "control_hz": 50, "physics_hz": 250,
             "num_envs": env.num_envs if args.backend == "warp" else 1,
             "ppo_n_steps": n_steps,
             "package_versions": {name: importlib.metadata.version(name) for name in

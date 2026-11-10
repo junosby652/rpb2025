@@ -17,7 +17,7 @@ class WarpPhysicsTests(unittest.TestCase):
     def test_matches_short_cpu_rollouts(self):
         actions = np.array([np.zeros(6), np.ones(6)*.5, np.ones(6)*-.5, np.ones(6)])
         rewards, gpu = self.env.simulate(actions, perturb=False)
-        cpu = Go1GaitEnv(duration=.2)
+        cpu = Go1GaitEnv(duration=.2, actuator_kv=self.env.actuator_kv)
         for action, reward, info in zip(actions, rewards, gpu):
             expected, reference = cpu.simulate(action, perturb=False)
             self.assertAlmostEqual(float(reward), expected, delta=.05)
@@ -46,6 +46,12 @@ class WarpPhysicsTests(unittest.TestCase):
         self.assertTrue(np.isfinite(rewards).all())
         self.assertEqual(len(infos), 4)
         self.assertTrue(all(i['survived_s'] <= .2 for i in infos))
+
+
+class DampedWarpPhysicsTests(WarpPhysicsTests):
+    @classmethod
+    def setUpClass(cls):
+        cls.env = WarpGo1VecEnv(nworld=4, duration=.2, actuator_kv=.5)
 
 
 if __name__ == '__main__':

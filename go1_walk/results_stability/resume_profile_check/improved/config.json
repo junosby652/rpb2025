@@ -1,0 +1,34 @@
+{
+  "seed": 42,
+  "requested_rollouts": 64,
+  "backend": "cpu",
+  "physics_device": "cpu",
+  "policy_device": "cpu",
+  "validation_backend": "cpu",
+  "actuator_kv": 0.5,
+  "actuator_kp": 100.0,
+  "control_hz": 50,
+  "physics_hz": 250,
+  "num_envs": 1,
+  "ppo_n_steps": 64,
+  "package_versions": {
+    "mujoco": "3.17.0",
+    "torch": "2.6.0+cpu",
+    "stable-baselines3": "2.7.1"
+  },
+  "actual_rollouts": 64,
+  "previous_checkpoint_rollouts": 2432,
+  "total_checkpoint_rollouts": 2496,
+  "resume_from": "go1_walk/results_stability/retrained/improved/best.zip",
+  "learning_rate": 0.0005,
+  "sim_seconds_per_rollout": 5.0,
+  "mode": "improved",
+  "wall_time_s": 18.682558059692383,
+  "algorithm": "PPO; one action per episode; gamma=0; six gait parameters",
+  "validation_seeds": [
+    900,
+    901,
+    902
+  ],
+  "target_speed_m_s": 0.25
+}

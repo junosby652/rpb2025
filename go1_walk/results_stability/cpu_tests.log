@@ -1,0 +1,11 @@
+test_action_bounds (go1_walk.test_env.PhysicalEnvironmentTests) ... ok
+test_gymnasium_contract (go1_walk.test_env.PhysicalEnvironmentTests) ... ok
+test_invalid_damping (go1_walk.test_env.PhysicalEnvironmentTests) ... ok
+test_kinematics_and_diagonal_phase (go1_walk.test_env.PhysicalEnvironmentTests) ... ok
+test_reproducible_physics_and_action_effect (go1_walk.test_env.PhysicalEnvironmentTests) ... ok
+test_servo_velocity_damping_force (go1_walk.test_env.PhysicalEnvironmentTests) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.941s
+
+OK

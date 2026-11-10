@@ -8,7 +8,7 @@ from .evaluate import plt, record
 import numpy as np
 import torch
 from stable_baselines3 import PPO
-from .env import Go1GaitEnv
+from .env import Go1GaitEnv, controller_options
 
 
 def compare(before, after, output, episodes=20, durations=(12., 60.), video=True, final=None):
@@ -30,7 +30,7 @@ def compare(before, after, output, episodes=20, durations=(12., 60.), video=True
         horizon = str(int(duration)) if float(duration).is_integer() else str(duration)
         summary[horizon] = {}
         for name, action in actions.items():
-            env = Go1GaitEnv(duration=duration)
+            env = Go1GaitEnv(duration=duration, **controller_options(checkpoints[name]))
             trials = []
             for seed in seeds:
                 env.reset(seed=seed)
@@ -52,6 +52,7 @@ def compare(before, after, output, episodes=20, durations=(12., 60.), video=True
     result = {"evaluation_seeds": seeds, "durations_s": list(durations),
               "checkpoints": {n: {"path": str(p), "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
                               for n, p in checkpoints.items()}, "results": summary}
+    result["controllers"] = {n: controller_options(p) for n, p in checkpoints.items()}
     (output / "comparison.json").write_text(json.dumps(result, indent=2))
     fig, axes = plt.subplots(len(durations), 3, figsize=(12, 4 * len(durations)), squeeze=False)
     for row, (horizon, policies) in enumerate(summary.items()):
@@ -91,7 +92,7 @@ def compare(before, after, output, episodes=20, durations=(12., 60.), video=True
     if video:
         for name in ("after", "final"):
             if name in actions:
-                env = Go1GaitEnv(duration=12.)
+                env = Go1GaitEnv(duration=12., **controller_options(checkpoints[name]))
                 record(env, actions[name], output / f"{name}.mp4", seed=seeds[0])
                 env.close()
     return result

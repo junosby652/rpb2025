@@ -4,6 +4,7 @@ This is an episodic gait-parameter task, not end-to-end joint control.
 The diagonal trot phase and inverse kinematics are supplied as a prior.
 """
 from pathlib import Path
+import json
 import math
 import gymnasium as gym
 import mujoco
@@ -13,6 +14,21 @@ MODEL = Path(__file__).parent / "assets/unitree_go1/scene.xml"
 PARAMETERS = ("stride_m", "frequency_hz", "leg_length_m", "clearance_m", "foot_offset_m", "stance_fraction")
 LOW = np.array([.03, 1., .245, .015, -.045, .50])
 HIGH = np.array([.17, 2.8, .31, .075, .045, .72])
+
+
+def configure_actuators(model, actuator_kv=0.):
+    """Optional velocity damping on position servos; retain the original kp/limits."""
+    if not np.isfinite(actuator_kv) or actuator_kv < 0:
+        raise ValueError("actuator_kv must be finite and nonnegative")
+    if actuator_kv > 0:
+        model.actuator_biasprm[:, 2] = -actuator_kv
+        model.opt.integrator = mujoco.mjtIntegrator.mjINT_IMPLICITFAST
+
+
+def controller_options(checkpoint):
+    """Restore physics/controller settings stored beside a policy checkpoint."""
+    config = Path(checkpoint).parent / "config.json"
+    return {"actuator_kv": json.loads(config.read_text()).get("actuator_kv", 0.) if config.exists() else 0.}
 
 
 def decode(action):
@@ -38,12 +54,14 @@ def targets(t, parameters):
 class Go1GaitEnv(gym.Env):
     metadata = {"render_modes": []}
 
-    def __init__(self, reward_mode="improved", duration=5., target_speed=.25):
+    def __init__(self, reward_mode="improved", duration=5., target_speed=.25, actuator_kv=0.):
         super().__init__()
         if reward_mode not in ("baseline", "improved"):
             raise ValueError(reward_mode)
         self.model = mujoco.MjModel.from_xml_path(str(MODEL))
         self.model.opt.timestep = .004
+        configure_actuators(self.model, actuator_kv)
+        self.actuator_kv = actuator_kv
         self.data = mujoco.MjData(self.model)
         self.duration, self.target_speed, self.reward_mode = duration, target_speed, reward_mode
         self.action_space = gym.spaces.Box(-1., 1., (6,), np.float32)
@@ -54,7 +72,7 @@ class Go1GaitEnv(gym.Env):
         super().reset(seed=seed)
         return np.zeros(1, np.float32), {}
 
-    def simulate(self, action, frame_callback=None, perturb=True):
+    def simulate(self, action, frame_callback=None, perturb=True, physics_callback=None):
         p = decode(action)
         mujoco.mj_resetDataKeyframe(self.model, self.data, 0)
         self.data.qpos[7:] = targets(0, p)
@@ -79,6 +97,8 @@ class Go1GaitEnv(gym.Env):
             self.data.ctrl[:] = np.clip(control, self.model.actuator_ctrlrange[:, 0], self.model.actuator_ctrlrange[:, 1])
             for _ in range(5):
                 mujoco.mj_step(self.model, self.data)
+                if physics_callback is not None:
+                    physics_callback(self.model, self.data)
                 energy += float(np.sum(np.abs(self.data.actuator_force * self.data.qvel[6:]))) * .004
             vx, vy = self.data.qvel[:2]
             upright = float(self.data.xmat[self.trunk, 8])

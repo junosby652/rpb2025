@@ -22,3 +22,5 @@ PPT 작성은 보류하고 보행 학습과 평가를 진행합니다.
 
 기존 결과는 CPU 환경에서 생성했으며, 사전 정의한 보행 궤적의 파라미터를 PPO로 학습합니다.
 RTX 4050 WSL2 환경용 가상환경과 MuJoCo Warp CUDA 병렬 물리 경로는 [로컬 실행 안내](go1_walk/LOCAL_SETUP.md)를 참고하세요.
+
+관절 떨림을 줄이는 제어와 추가 학습 결과는 [안정화 기록](go1_walk/STABILITY.md), [전후 비교 영상](go1_walk/results_stability/assessment/side_by_side.mp4), [새 평가 결과](go1_walk/results_stability/assessment/안정화평가.md)에 정리했습니다.

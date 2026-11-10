@@ -16,7 +16,7 @@ import mujoco
 import numpy as np
 import torch
 from stable_baselines3 import PPO
-from .env import Go1GaitEnv
+from .env import Go1GaitEnv, controller_options
 
 
 def evaluate(root, seeds=range(1000, 1010), duration=12., video=True):
@@ -25,7 +25,8 @@ def evaluate(root, seeds=range(1000, 1010), duration=12., video=True):
     summary, rows = {}, []
     for name in ["initial", "baseline", "improved"]:
         action = np.zeros(6, np.float32) if name == "initial" else PPO.load(root / name / "best", device="cpu").predict(np.zeros(1, np.float32), deterministic=True)[0]
-        env = Go1GaitEnv("improved", duration=duration)
+        settings = controller_options(root / ("improved" if name == "initial" else name) / "best.zip")
+        env = Go1GaitEnv("improved", duration=duration, **settings)
         trials = []
         for seed in seeds:
             env.reset(seed=seed)
@@ -35,7 +36,8 @@ def evaluate(root, seeds=range(1000, 1010), duration=12., video=True):
         keys = ["speed_m_s", "distance_m", "mean_power_W", "energy_J", "mean_tilt", "lateral_drift_m", "survived_s", "tracking_score"]
         summary[name] = {k: {"mean": float(np.mean([r[k] for r in trials])), "std": float(np.std([r[k] for r in trials]))} for k in keys}
         summary[name].update(falls=sum(r["fell"] for r in trials), episodes=len(trials),
-                             duration_s=duration, action=action.tolist(), parameters=trials[0]["parameters"])
+                             duration_s=duration, action=action.tolist(), parameters=trials[0]["parameters"],
+                             controller=settings)
         if video:
             record(env, action, root / f"{name}.mp4")
         print(name, json.dumps(summary[name]), flush=True)

@@ -1,0 +1,67 @@
+{
+  "checkpoint": "go1_walk/results_stability/retrained/improved/best.zip",
+  "controller_config": "go1_walk/results_stability/retrained/improved/config.json",
+  "selected_variant": "retrained",
+  "actuator_kv": 0.5,
+  "selection_seeds": [
+    900,
+    901,
+    902
+  ],
+  "evaluation_seeds": [
+    5000,
+    5001,
+    5002,
+    5003,
+    5004,
+    5005,
+    5006,
+    5007,
+    5008,
+    5009
+  ],
+  "cpu_tests_passed": 6,
+  "gpu_tests_passed": 6,
+  "resume_profile_restoration_verified": true,
+  "results": {
+    "12": {
+      "joint_hf_rms_reduction_percent": 76.03598395820256,
+      "old_speed_m_s": 0.23419900123350587,
+      "new_speed_m_s": 0.22448764628920692,
+      "old_absolute_lateral_drift_m": 0.1084803861657528,
+      "new_absolute_lateral_drift_m": 0.04254012401711537,
+      "old_falls": 0,
+      "new_falls": 0
+    },
+    "60": {
+      "joint_hf_rms_reduction_percent": 75.81512210396602,
+      "old_speed_m_s": 0.1776059770343598,
+      "new_speed_m_s": 0.2218252295226279,
+      "old_absolute_lateral_drift_m": 7.115345392909099,
+      "new_absolute_lateral_drift_m": 1.9191830230260365,
+      "old_falls": 0,
+      "new_falls": 0
+    }
+  },
+  "preserved_artifacts_unchanged": 55,
+  "videos": {
+    "before_12s.mp4": {
+      "frames": 300,
+      "duration_s": 12.0,
+      "bytes": 1618243,
+      "sha256": "9d985452186dfb1cdeca8dee09310922679f76d63ec7904e379342a675090254"
+    },
+    "stabilized_12s.mp4": {
+      "frames": 300,
+      "duration_s": 12.0,
+      "bytes": 1517490,
+      "sha256": "b5fee10590c7d794efeb77ca22c1ee3633d8e61aa8bd5190bf6541ce427d3f91"
+    },
+    "side_by_side.mp4": {
+      "frames": 300,
+      "duration_s": 12.0,
+      "bytes": 1687274,
+      "sha256": "ea736d5ee8fdfce6dd95e91d8fd7c05b14a1294c03e47b5e39e14cf1bf199875"
+    }
+  }
+}

@@ -5,6 +5,23 @@ from .env import Go1GaitEnv, decode, LOW, HIGH, targets
 
 
 class PhysicalEnvironmentTests(unittest.TestCase):
+    def test_servo_velocity_damping_force(self):
+        import mujoco
+        env = Go1GaitEnv(actuator_kv=.5)
+        mujoco.mj_resetDataKeyframe(env.model, env.data, 0)
+        env.data.ctrl[:] = env.data.qpos[7:]
+        mujoco.mj_forward(env.model, env.data)
+        static = env.data.actuator_force.copy()
+        env.data.qvel[6:] = 1.
+        mujoco.mj_forward(env.model, env.data)
+        np.testing.assert_allclose(env.data.actuator_force - static, -.5, atol=1e-9)
+        env.close()
+
+    def test_invalid_damping(self):
+        for value in (-1., float('nan'), float('inf')):
+            with self.assertRaises(ValueError):
+                Go1GaitEnv(actuator_kv=value)
+
     def test_action_bounds(self):
         np.testing.assert_allclose(decode(np.full(6, -2.)), LOW)
         np.testing.assert_allclose(decode(np.full(6, 2.)), HIGH)

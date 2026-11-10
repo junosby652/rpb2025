@@ -1,0 +1,27 @@
+/home/junosby/.config/matplotlib is not a writable directory
+Matplotlib created a temporary cache directory at /tmp/matplotlib-zavr2hby because there was an issue with the default path (/home/junosby/.config/matplotlib); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+Selected on validation seeds 900-902: retrained
+12s original: speed=0.2342, joint_HF=1.1112, power=300.3, drift=0.108, falls=0/10
+12s damped: speed=0.2311, joint_HF=0.4069, power=166.5, drift=0.140, falls=0/10
+12s retrained: speed=0.2245, joint_HF=0.2663, power=100.0, drift=0.043, falls=0/10
+60s original: speed=0.1776, joint_HF=1.1029, power=313.4, drift=7.115, falls=0/10
+60s damped: speed=0.2309, joint_HF=0.4078, power=185.9, drift=1.651, falls=0/10
+60s retrained: speed=0.2218, joint_HF=0.2667, power=106.6, drift=1.919, falls=0/10
+/home/junosby/rpb2025/.venv/lib/python3.10/site-packages/glfw/__init__.py:917: GLFWError: (65550) b'X11: Failed to open display :0'
+  warnings.warn(message, GLFWError)
+/home/junosby/rpb2025/.venv/lib/python3.10/site-packages/glfw/__init__.py:917: GLFWError: (65537) b'The GLFW library is not initialized'
+  warnings.warn(message, GLFWError)
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/junosby/rpb2025/go1_walk/stability.py", line 200, in <module>
+    audit(args.reference, args.candidate, args.output, args.episodes, args.seed_start)
+  File "/home/junosby/rpb2025/go1_walk/stability.py", line 153, in audit
+    record(env, action, output/filename, seed=seeds[0])
+  File "/home/junosby/rpb2025/go1_walk/evaluate.py", line 57, in record
+    with mujoco.Renderer(env.model, height=480, width=640) as renderer:
+  File "/home/junosby/rpb2025/.venv/lib/python3.10/site-packages/mujoco/rendering/classic/renderer.py", line 92, in __init__
+    self._mjr_context = mujoco.MjrContext(model, font_scale.value)
+mujoco.FatalError: an OpenGL platform library has not been loaded into this process, this most likely means that a valid OpenGL context has not been created before mjr_makeContext was called

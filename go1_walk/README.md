@@ -35,6 +35,8 @@ python -m go1_walk.train --backend warp --num-envs 64 --mode improved \
   --steps 2048 --output go1_walk/results_warp_new
 ```
 
+관절이 덜덜 떠는 문제의 제어 수정과 새 모델·비교 영상은 [떨림 완화 기록](STABILITY.md)을 참고한다. `--actuator-kv 0.5`로 액추에이터 속도 감쇠를 추가할 수 있으며, 학습·검증·평가·영상에서 동일한 제어 설정을 사용한다. 기본값은 기존 동작을 보존하고, 이어 학습할 때는 체크포인트의 설정을 자동 복원한다.
+
 이 경로는 동일한 행동·관측·보상과 4ms 물리 / 20ms 제어 주기를 유지한다. 검증 체크포인트 선택은 CPU MuJoCo의 고정된 검증 시드로 진행한다. `--resume`으로 기존 CPU 정책을 GPU 물리 학습에 이어 쓸 수 있다. Warp는 float32이므로 CPU의 float64 궤적과 장시간 완전히 일치하지 않을 수 있다. 요청한 `--steps`는 병렬 환경 수 × PPO rollout 길이의 배수로 올림하며 실제 횟수와 장치를 `config.json`에 기록한다. CUDA 접근에 실패하면 오류를 내며 CPU로 자동 대체하지 않는다.
 
 `improved`만 학습한 결과의 영상·비교 평가는 다음 명령으로 생성한다. 새 출력 폴더를 지정해야 한다. 기존 CPU best와 이번 best/final을 같은 CPU MuJoCo에서 새 시드 3000~3019로 12초·60초 평가하고, 12초 MP4 세 개와 CSV·JSON·그래프·한국어 보고서를 만든다. 기존 `evaluate` 명령은 baseline과 improved가 모두 있는 결과 폴더용이다.

@@ -10,7 +10,7 @@ import mujoco_warp as mjw
 import numpy as np
 import warp as wp
 from stable_baselines3.common.vec_env import VecEnv
-from .env import MODEL, PARAMETERS, decode, targets
+from .env import MODEL, PARAMETERS, decode, targets, configure_actuators
 
 
 @wp.kernel
@@ -82,7 +82,7 @@ def measure(q: wp.array2d(dtype=float), vel: wp.array2d(dtype=float),
 
 class WarpGo1VecEnv(VecEnv):
     def __init__(self, nworld=64, reward_mode="improved", duration=5., seed=42,
-                 nconmax=64, njmax=256):
+                 nconmax=64, njmax=256, actuator_kv=0.):
         if nworld < 1 or duration <= 0 or reward_mode not in ("baseline", "improved"):
             raise ValueError("Invalid world count, duration, or reward mode")
         wp.init()
@@ -92,6 +92,8 @@ class WarpGo1VecEnv(VecEnv):
         self.rng = np.random.default_rng(seed)
         self.model = mujoco.MjModel.from_xml_path(str(MODEL))
         self.model.opt.timestep = .004
+        configure_actuators(self.model, actuator_kv)
+        self.actuator_kv = actuator_kv
         self.trunk = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_BODY, "trunk")
         self.render_mode = None
         super().__init__(nworld, gym.spaces.Box(-1., 1., (1,), np.float32),

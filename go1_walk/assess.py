@@ -8,7 +8,7 @@ from pathlib import Path
 import shutil
 
 from .evaluate import plt, record
-from .env import Go1GaitEnv
+from .env import Go1GaitEnv, controller_options
 import numpy as np
 import torch
 from stable_baselines3 import PPO
@@ -32,6 +32,7 @@ def assess(results, reference, output, episodes=20, seed_start=3000, durations=(
     actions = {name: PPO.load(path, device='cpu').predict(np.zeros(1, np.float32), deterministic=True)[0]
                for name, path in checkpoints.items()}
     hashes = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in checkpoints.values()}
+    controllers = {name: controller_options(path) for name, path in checkpoints.items()}
     seeds = list(range(seed_start, seed_start+episodes))
     if set(seeds) & {900, 901, 902}:
         raise ValueError('Evaluation seeds must exclude checkpoint-selection seeds 900..902')
@@ -40,9 +41,9 @@ def assess(results, reference, output, episodes=20, seed_start=3000, durations=(
     for duration in durations:
         summaries[str(duration)] = {}
         for name, action in actions.items():
-            key = (duration, action.tobytes())
+            key = (duration, action.tobytes(), controllers[name]['actuator_kv'])
             if key not in cache:
-                env = Go1GaitEnv(duration=duration)
+                env = Go1GaitEnv(duration=duration, **controllers[name])
                 trials = []
                 try:
                     for seed in seeds:
@@ -80,6 +81,7 @@ def assess(results, reference, output, episodes=20, seed_start=3000, durations=(
                   training_config=json.loads((results/'improved/config.json').read_text()),
                   packages={n: importlib.metadata.version(n) for n in ('mujoco', 'numpy', 'torch', 'stable-baselines3')},
                   checkpoints={n: dict(path=str(p), sha256=hashes[str(p)]) for n, p in checkpoints.items()},
+                  controllers=controllers,
                   best_final_deterministic_actions_identical=equal, results=summaries)
     (output/'evaluation.json').write_text(json.dumps(result, indent=2))
     figure, axes = plt.subplots(len(durations), 4, figsize=(16, 4*len(durations)), squeeze=False)
@@ -118,12 +120,12 @@ def assess(results, reference, output, episodes=20, seed_start=3000, durations=(
     recorded = {}
     for name, action in actions.items():
         destination = output/f'{name}_12s.mp4'
-        key = action.tobytes()
+        key = (action.tobytes(), controllers[name]['actuator_kv'])
         if key in recorded:
             shutil.copyfile(recorded[key], destination)
             shutil.copyfile(recorded[key].with_suffix('.png'), destination.with_suffix('.png'))
         else:
-            env = Go1GaitEnv(duration=12.)
+            env = Go1GaitEnv(duration=12., **controllers[name])
             try:
                 record(env, action, destination, seed=seeds[0])
             finally:
