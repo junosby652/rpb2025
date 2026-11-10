@@ -1,0 +1,19 @@
+{
+  "seed": 42,
+  "requested_rollouts": 4096,
+  "actual_rollouts": 4096,
+  "previous_checkpoint_rollouts": 1024,
+  "total_checkpoint_rollouts": 5120,
+  "resume_from": "go1_walk/results/improved/best.zip",
+  "learning_rate": 0.0005,
+  "sim_seconds_per_rollout": 5.0,
+  "mode": "improved",
+  "wall_time_s": 426.4430253505707,
+  "algorithm": "PPO; one action per episode; gamma=0; six gait parameters",
+  "validation_seeds": [
+    900,
+    901,
+    902
+  ],
+  "target_speed_m_s": 0.25
+}

@@ -25,7 +25,6 @@ python -m unittest go1_walk.test_env -v
 # 각 실험에 2,048개의 물리 롤아웃. 기존 결과를 보존하기 위해 새 경로 사용.
 python -m go1_walk.train --steps 2048 --seed 42 --output go1_walk/results_new
 MUJOCO_GL=egl python -m go1_walk.evaluate --results go1_walk/results_new
-python -m go1_walk.presentation --results go1_walk/results_new
 ```
 
 기존 학습 결과만 재평가:
@@ -43,12 +42,12 @@ python -m go1_walk.train --mode improved --steps 4096 \
   --resume go1_walk/results/improved/best.zip \
   --learning-rate 0.0005 --validation-every 256 \
   --output go1_walk/results_extended
-python -m go1_walk.compare
+python -m go1_walk.compare --final go1_walk/results_extended/improved/final.zip
 ```
 
 체크포인트의 정책과 optimizer 상태를 불러오고 **추가로** 4,096개 에피소드를 학습한다. 기존 출력은 덮어쓰지 않는다. 추가 실험의 `best.zip`은 시작 모델도 후보에 포함해 검증 보상이 가장 높은 모델을 보존한다. `final.zip`은 추가 학습을 모두 마친 모델이며, 항상 best보다 좋은 것은 아니다. `best_metrics.json`에 선택된 시점과 검증 성능을 기록한다.
 
-`compare`는 추가 학습 전후 정책을 새 평가 시드 2000~2019에서 각 12초·60초 실행한다. 기본 출력은 `results_extended/`의 원자료, 그래프, `추가학습기록.md`, `after.mp4`다. **PPT는 생성하지 않는다.** 평가 시드는 체크포인트 선택에 사용하지 않는다.
+`compare`는 추가 학습 전후 정책을 새 평가 시드 2000~2019에서 각 12초·60초 실행한다. `--final`을 주면 검증 최우수 정책뿐 아니라 종료 시점의 정책도 함께 비교한다. 기본 출력은 `results_extended/`의 원자료, 그래프, `추가학습기록.md`, `after.mp4`이며 `--final`을 주면 `final.mp4`도 저장한다. **PPT는 생성하지 않는다.** 평가 시드는 체크포인트 선택에 사용하지 않는다.
 
 원래 2,048개 학습 에피소드 중 선택된 최우수 체크포인트는 1,024번째 시점의 정책이다. 이어 학습할 때의 누적 카운터는 이 체크포인트에서 시작한다. 따라서 `actual_rollouts`(이번 추가 학습 횟수), `previous_checkpoint_rollouts`(복원 시점), `total_checkpoint_rollouts`(학습 종료 시점)를 구분한다.
 
@@ -95,7 +94,9 @@ exp(-(vx - 0.25)^2 / 0.04)       # 0.25 m/s 목표 속도 추종
 - `results/evaluation.json`, `evaluation.csv`: 세 정책을 각각 12초 × 10개 별도 초기 상태로 평가한 원자료.
 - `initial.mp4`, `baseline.mp4`, `improved.mp4`: 같은 평가 시드 1000에서의 실제 시뮬레이션 영상. 25fps, 이동 카메라.
 - `comparison.png`, `learning_curves.png`: 평가 비교 및 학습 곡선.
-- `발표자료.pptx`, `실험기록.md`: 자동 생성한 발표 자료와 관측된 결과 정리.
+- `실험기록.md`: 첫 실험에서 관측된 결과 정리. 추가 학습 기록은 `results_extended/추가학습기록.md`에 별도로 저장한다.
+
+PPT 작업은 현재 보류했다. 나중에 필요하면 `python -m go1_walk.presentation --results go1_walk/results`로 별도 생성할 수 있다. PPT 파일은 Git에 올리지 않는다.
 
 속도는 준비 자세에서 0.5초 정착한 뒤의 순 전방 변위 / 실제 생존 시간이다. `tracking_score`는 목표 속도 추종 항의 전체 예정 평가 구간 평균이며 1에 가까울수록 좋다. `mean_tilt`는 라디안이 아니라 `1 - body_up_z`다. 결과의 표준편차는 같은 학습 모델의 서로 다른 초기 상태에 대한 값이다. **독립적인 학습 시드 10개를 반복한 결과가 아니다.**
 

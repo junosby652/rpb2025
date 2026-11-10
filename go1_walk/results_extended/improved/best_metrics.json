@@ -1,0 +1,18 @@
+{
+  "additional_rollouts": 0,
+  "checkpoint_rollouts": 1024,
+  "mean_reward": 0.44071031552410195,
+  "validation_seeds": [
+    900,
+    901,
+    902
+  ],
+  "parameters": {
+    "stride_m": 0.13069469451904298,
+    "frequency_hz": 1.5687148928642274,
+    "leg_length_m": 0.2776250702142715,
+    "clearance_m": 0.05253896713256836,
+    "foot_offset_m": -0.02287578284740448,
+    "stance_fraction": 0.6165261280536651
+  }
+}
