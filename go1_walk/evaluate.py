@@ -40,7 +40,7 @@ def evaluate(root, seeds=range(1000, 1010), duration=12., video=True):
             record(env, action, root / f"{name}.mp4")
         print(name, json.dumps(summary[name]), flush=True)
     with (root / "evaluation.csv").open("w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=rows[0].keys())
+        writer = csv.DictWriter(f, fieldnames=rows[0].keys(), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     (root / "evaluation.json").write_text(json.dumps(summary, indent=2))
@@ -48,8 +48,8 @@ def evaluate(root, seeds=range(1000, 1010), duration=12., video=True):
     return summary
 
 
-def record(env, action, destination):
-    env.reset(seed=1000)
+def record(env, action, destination, seed=1000):
+    env.reset(seed=seed)
     camera = mujoco.MjvCamera()
     camera.distance, camera.azimuth, camera.elevation = 1.8, 135, -20
     with mujoco.Renderer(env.model, height=480, width=640) as renderer:

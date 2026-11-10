@@ -36,6 +36,22 @@ MUJOCO_GL=egl python -m go1_walk.evaluate --results go1_walk/results
 
 렌더링이 없는 서버에서는 `--no-video`로 수치 평가만 실행한다. `--steps`는 시뮬레이션의 제어 스텝 수가 아니라 **5초짜리 전체 에피소드 수**다. PPO rollout buffer 64개 단위로 반올림되며 `config.json`에 실제 개수를 기록한다. 학습은 CPU에서도 가능하지만 수 분 이상 걸린다. `best.zip`은 검증 시드 900~902의 평균 보상으로 선택하며, 최종 성능 평가에는 별도 시드 1000~1009를 사용한다.
 
+### 기존 모델에서 추가 학습
+
+```bash
+python -m go1_walk.train --mode improved --steps 4096 \
+  --resume go1_walk/results/improved/best.zip \
+  --learning-rate 0.0005 --validation-every 256 \
+  --output go1_walk/results_extended
+python -m go1_walk.compare
+```
+
+체크포인트의 정책과 optimizer 상태를 불러오고 **추가로** 4,096개 에피소드를 학습한다. 기존 출력은 덮어쓰지 않는다. 추가 실험의 `best.zip`은 시작 모델도 후보에 포함해 검증 보상이 가장 높은 모델을 보존한다. `final.zip`은 추가 학습을 모두 마친 모델이며, 항상 best보다 좋은 것은 아니다. `best_metrics.json`에 선택된 시점과 검증 성능을 기록한다.
+
+`compare`는 추가 학습 전후 정책을 새 평가 시드 2000~2019에서 각 12초·60초 실행한다. 기본 출력은 `results_extended/`의 원자료, 그래프, `추가학습기록.md`, `after.mp4`다. **PPT는 생성하지 않는다.** 평가 시드는 체크포인트 선택에 사용하지 않는다.
+
+원래 2,048개 학습 에피소드 중 선택된 최우수 체크포인트는 1,024번째 시점의 정책이다. 이어 학습할 때의 누적 카운터는 이 체크포인트에서 시작한다. 따라서 `actual_rollouts`(이번 추가 학습 횟수), `previous_checkpoint_rollouts`(복원 시점), `total_checkpoint_rollouts`(학습 종료 시점)를 구분한다.
+
 ## 무엇을 학습하는가
 
 PPO가 매 에피소드 시작에 **보행 파라미터 6개**를 선택한다. 이 파라미터로 발 궤적을 생성하고 역기구학으로 12개 관절 목표각을 계산한다. MuJoCo의 원본 위치 액추에이터가 물리적으로 로봇을 움직인다.
