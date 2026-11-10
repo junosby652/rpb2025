@@ -2,6 +2,7 @@
 import argparse
 import csv
 import json
+import importlib.metadata
 from pathlib import Path
 import time
 import numpy as np
@@ -27,12 +28,13 @@ class Progress(BaseCallback):
         self._evaluate()
 
     def _on_step(self):
-        info = self.locals["infos"][0]
-        self.rows.append({"episode": self.num_timesteps, **{k: v for k, v in info.items() if k not in ("parameters", "episode", "terminal_observation", "TimeLimit.truncated")}})
+        infos = self.locals["infos"]
+        for i, info in enumerate(infos):
+            self.rows.append({"episode": self.num_timesteps - len(infos) + i + 1, **{k: v for k, v in info.items() if k not in ("parameters", "episode", "terminal_observation", "TimeLimit.truncated")}})
         return True
 
     def _on_rollout_end(self):
-        if len(self.rows) % self.validation_every == 0:
+        if len(self.rows) - self.validation_rows[-1]["additional_rollouts"] >= self.validation_every:
             self._evaluate()
 
     def _evaluate(self):
@@ -74,11 +76,13 @@ def main():
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--mode", choices=["baseline", "improved", "both"], default="both")
     parser.add_argument("--output", type=Path, default=Path("go1_walk/results"))
+    parser.add_argument("--backend", choices=["cpu", "warp"], default="cpu")
+    parser.add_argument("--num-envs", type=int, default=64, help="Parallel CUDA worlds for --backend warp")
     parser.add_argument("--resume", type=Path, help="Continue from a PPO checkpoint, retaining optimizer state")
     parser.add_argument("--learning-rate", type=float, default=.003)
     parser.add_argument("--validation-every", type=int, default=64)
     args = parser.parse_args()
-    if args.steps <= 0 or args.validation_every <= 0 or args.learning_rate <= 0:
+    if args.steps <= 0 or args.validation_every <= 0 or args.learning_rate <= 0 or args.num_envs <= 0:
         parser.error("steps, validation-every and learning-rate must be positive")
     if args.resume and args.mode == "both":
         parser.error("Choose the checkpoint's --mode when using --resume")
@@ -88,13 +92,19 @@ def main():
         if directory.exists() and any(directory.iterdir()):
             raise FileExistsError(f"Use another --output directory to preserve {directory}")
         directory.mkdir(parents=True, exist_ok=True)
-        env = Monitor(Go1GaitEnv(mode), str(directory / "monitor.csv"))
+        if args.backend == "warp":
+            from .warp_env import WarpGo1VecEnv
+            env = WarpGo1VecEnv(args.num_envs, mode, seed=args.seed)
+            n_steps = max(1, int(np.ceil(64 / args.num_envs)))
+        else:
+            env = Monitor(Go1GaitEnv(mode), str(directory / "monitor.csv"))
+            n_steps = 64
         if args.resume:
             model = PPO.load(args.resume, env=env, device="cpu", seed=args.seed,
-                             learning_rate=args.learning_rate)
+                             learning_rate=args.learning_rate, n_steps=n_steps)
         else:
             model = PPO("MlpPolicy", env, device="cpu", seed=args.seed,
-                        learning_rate=args.learning_rate, n_steps=64, batch_size=32, n_epochs=10,
+                        learning_rate=args.learning_rate, n_steps=n_steps, batch_size=32, n_epochs=10,
                         gamma=0., gae_lambda=1., ent_coef=.002, clip_range=.2,
                         policy_kwargs={"net_arch": [32, 32], "log_std_init": -.5}, verbose=0)
         previous_rollouts = model.num_timesteps
@@ -104,6 +114,13 @@ def main():
         model.save(directory / "final")
         (directory / "config.json").write_text(json.dumps({
             "seed": args.seed, "requested_rollouts": args.steps,
+            "backend": args.backend, "physics_device": "cuda:0" if args.backend == "warp" else "cpu",
+            "policy_device": "cpu", "validation_backend": "cpu",
+            "num_envs": env.num_envs if args.backend == "warp" else 1,
+            "ppo_n_steps": n_steps,
+            "package_versions": {name: importlib.metadata.version(name) for name in
+                                 (["mujoco", "torch", "stable-baselines3"] +
+                                  (["mujoco-warp", "warp-lang"] if args.backend == "warp" else []))},
             "actual_rollouts": model.num_timesteps - previous_rollouts,
             "previous_checkpoint_rollouts": previous_rollouts,
             "total_checkpoint_rollouts": model.num_timesteps,

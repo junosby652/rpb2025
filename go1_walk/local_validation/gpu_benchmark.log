@@ -1,0 +1,107 @@
+Warp FutureWarning: Support for Python 3.10 is deprecated and will be removed in Warp 1.20. Please upgrade to Python 3.11 or newer.
+Warp 1.19.0 initialized:
+   CUDA Toolkit 12.9, Driver 12.9
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA GeForce RTX 4050 Laptop GPU" (6 GiB, sm_89, mempool enabled)
+   Kernel cache:
+     /home/junosby/.cache/warp/1.19.0
+Module reset_data__locals__reset_xfrc_applied_36d71606 36d7160 load on device 'cuda:0' took 1.10 ms  (cached)
+Module reset_data__locals__reset_M_29a8070b 29a8070 load on device 'cuda:0' took 0.97 ms  (cached)
+Module reset_data__locals__reset_mocap_7165be97 7165be9 load on device 'cuda:0' took 0.86 ms  (cached)
+Module reset_data__locals__reset_contact_76463a73 76463a7 load on device 'cuda:0' took 1.26 ms  (cached)
+Module reset_data__locals__reset_sleep_a8d12f5c a8d12f5 load on device 'cuda:0' took 1.24 ms  (cached)
+Module reset_data__locals__reset_nworld_a914623a a914623 load on device 'cuda:0' took 1.42 ms  (cached)
+Module mujoco_warp._src.smooth 6774445 load on device 'cuda:0' took 4.90 ms  (cached)
+Module _subtree_com_acc__locals__kernel_3896ce10 3896ce1 load on device 'cuda:0' took 1.49 ms  (cached)
+Module _crb_accumulate__locals__kernel_90ab7522 90ab752 load on device 'cuda:0' took 1.11 ms  (cached)
+Module _nxn_broadphase__locals__kernel_0dcff9d2 0dcff9d load on device 'cuda:0' took 1.27 ms  (cached)
+Module _nxn_broadphase__locals__kernel_0dcff9d2 1c34f5a load on device 'cuda:0' took 1.18 ms  (cached)
+Module ccd_kernel_builder__locals__ccd_kernel_2eee525d 2eee525 load on device 'cuda:0' took 9.96 ms  (cached)
+Module ccd_kernel_builder__locals__ccd_kernel_b072c543 b072c54 load on device 'cuda:0' took 3.90 ms  (cached)
+Module _primitive_narrowphase__locals__primitive_narrowphase_e906d734 e906d73 load on device 'cuda:0' took 2.20 ms  (cached)
+Module mujoco_warp._src.constraint 9feb269 load on device 'cuda:0' took 1.30 ms  (cached)
+Module _friction_dof__locals__kernel_8d7e2098 8d7e209 load on device 'cuda:0' took 1.57 ms  (cached)
+Module _limit_slide_hinge__locals__kernel_9089d689 9089d68 load on device 'cuda:0' took 1.41 ms  (cached)
+Module _efc_contact_init__locals__kernel_e6485be6 e6485be load on device 'cuda:0' took 1.72 ms  (cached)
+Module _efc_contact_jac_dense__locals__kernel_8249addb 93def63 load on device 'cuda:0' took 1.24 ms  (cached)
+Module _efc_contact_update__locals__kernel_08ca74ca 08ca74c load on device 'cuda:0' took 1.54 ms  (cached)
+Module _transmission__locals__kernel_dea7390e dea7390 load on device 'cuda:0' took 1.83 ms  (cached)
+Module mujoco_warp._src.forward 8778b9a load on device 'cuda:0' took 3.65 ms  (cached)
+Module mujoco_warp._src.passive a541019 load on device 'cuda:0' took 1.63 ms  (cached)
+Module _gravity_force__locals__kernel_ae06eb60 ae06eb6 load on device 'cuda:0' took 1.18 ms  (cached)
+Module _qfrc_passive_kernel__locals__kernel_887f05a4 887f05a load on device 'cuda:0' took 1.29 ms  (cached)
+Module _cfrc_backward__locals__kernel_a834cc03 a834cc0 load on device 'cuda:0' took 1.15 ms  (cached)
+Module _qfrc_actuator__locals__kernel_cc8a1793 cc8a179 load on device 'cuda:0' took 1.19 ms  (cached)
+Module _qfrc_smooth__locals__kernel_5d93552d 5d93552 load on device 'cuda:0' took 1.20 ms  (cached)
+Module mujoco_warp._src.support d4bd46c load on device 'cuda:0' took 1.12 ms  (cached)
+Module _tile_cholesky_factorize_solve_block__locals__kernel_997973d9 67664d7 load on device 'cuda:0' took 67.47 ms  (cached)
+Module _solve_init_dof__locals__kernel_08db194e 08db194 load on device 'cuda:0' took 1.25 ms  (cached)
+Module mujoco_warp._src.solver cd4ec3c load on device 'cuda:0' took 1.59 ms  (cached)
+Module _solve_init_jaref_kernel__locals__kernel_45140aff 45140af load on device 'cuda:0' took 0.79 ms  (cached)
+Module mul_m_kernel__locals___mul_m_2eb0ef19 2eb0ef1 load on device 'cuda:0' took 1.23 ms  (cached)
+Module _update_constraint_efc__locals__kernel_c81c55ec c81c55e load on device 'cuda:0' took 0.99 ms  (cached)
+Module _update_constraint_init_qfrc_constraint_dense__locals__kernel_1f63a94a 1f63a94 load on device 'cuda:0' took 0.99 ms  (cached)
+Module _update_gradient_zero_grad_dot__locals__kernel_eeeb13da eeeb13d load on device 'cuda:0' took 0.95 ms  (cached)
+Module _update_gradient_grad__locals__kernel_6b3af6f7 6b3af6f load on device 'cuda:0' took 0.96 ms  (cached)
+Module _update_gradient_JTDAJ_dense_tiled__locals__kernel_d3b5f4cd 72cf802 load on device 'cuda:0' took 2.69 ms  (cached)
+Module _update_gradient_JTCJ_dense__locals__kernel_d7996384 d799638 load on device 'cuda:0' took 1.23 ms  (cached)
+Module _update_gradient_cholesky__locals__kernel_9c2a89df b896a5d load on device 'cuda:0' took 109.72 ms  (cached)
+Module _linesearch_iterative_kernel__locals__kernel_4e0377b2 7297693 load on device 'cuda:0' took 2.04 ms  (cached)
+Module _solve_done__locals__kernel_f10f2c47 f10f2c4 load on device 'cuda:0' took 0.98 ms  (cached)
+Module go1_walk.warp_env cdca26a load on device 'cuda:0' took 2.02 ms  (cached)
+Module _next_time_builder__locals___next_time_1cb22d2e 1cb22d2 load on device 'cuda:0' took 0.93 ms  (cached)
+{
+  "num_envs": 64,
+  "batches": 3,
+  "duration_s": 5.0,
+  "warmup_and_compile_s": 2.785563816999911,
+  "gpu_s": 1.4955263859999377,
+  "cpu_s": 15.322887410000021,
+  "gpu_episodes_per_s": 128.38289033036693,
+  "cpu_episodes_per_s": 12.530275454135165,
+  "speedup": 10.245815489076005,
+  "gpu_sample": {
+    "distance_m": 0.3503921329975128,
+    "speed_m_s": 0.07007842659950256,
+    "lateral_drift_m": -0.30347907543182373,
+    "survived_s": 5.0,
+    "fell": false,
+    "energy_J": 1592.1343994140625,
+    "mean_power_W": 318.4268798828125,
+    "mean_tilt": 0.0084672269821167,
+    "tracking_score": 0.46303298950195315,
+    "reward": -0.09918856811523437,
+    "parameters": {
+      "stride_m": 0.10000000149011612,
+      "frequency_hz": 1.899999976158142,
+      "leg_length_m": 0.2775000035762787,
+      "clearance_m": 0.04500000178813934,
+      "foot_offset_m": 0.0,
+      "stance_fraction": 0.6100000143051147
+    }
+  },
+  "cpu_sample": {
+    "distance_m": 0.3504437328439379,
+    "speed_m_s": 0.07008874656878758,
+    "lateral_drift_m": -0.30346853257098844,
+    "survived_s": 5.0,
+    "fell": false,
+    "energy_J": 1592.1324873665237,
+    "mean_power_W": 318.4264974733047,
+    "mean_tilt": 0.008467288912302005,
+    "tracking_score": 0.46306613551282705,
+    "reward": -0.09913315741007576,
+    "parameters": {
+      "stride_m": 0.1,
+      "frequency_hz": 1.9,
+      "leg_length_m": 0.27749999999999997,
+      "clearance_m": 0.045,
+      "foot_offset_m": 0.0,
+      "stance_fraction": 0.61
+    }
+  },
+  "physics_device": "cuda:0",
+  "policy_device": "cpu",
+  "note": "Includes reset and transfers; excludes compilation and PPO. CPU stops on falls; GPU runs the fixed horizon with masked metrics."
+}

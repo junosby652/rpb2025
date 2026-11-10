@@ -1,0 +1,32 @@
+{
+  "seed": 42,
+  "requested_rollouts": 256,
+  "backend": "warp",
+  "physics_device": "cuda:0",
+  "policy_device": "cpu",
+  "validation_backend": "cpu",
+  "num_envs": 64,
+  "ppo_n_steps": 1,
+  "package_versions": {
+    "mujoco": "3.17.0",
+    "torch": "2.6.0+cpu",
+    "stable-baselines3": "2.7.1",
+    "mujoco-warp": "3.17.0",
+    "warp-lang": "1.19.0+cu12"
+  },
+  "actual_rollouts": 256,
+  "previous_checkpoint_rollouts": 0,
+  "total_checkpoint_rollouts": 256,
+  "resume_from": null,
+  "learning_rate": 0.003,
+  "sim_seconds_per_rollout": 5.0,
+  "mode": "improved",
+  "wall_time_s": 4.59116268157959,
+  "algorithm": "PPO; one action per episode; gamma=0; six gait parameters",
+  "validation_seeds": [
+    900,
+    901,
+    902
+  ],
+  "target_speed_m_s": 0.25
+}

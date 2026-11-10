@@ -1,0 +1,25 @@
+{
+  "seed": 42,
+  "requested_rollouts": 64,
+  "backend": "cpu",
+  "physics_device": "cpu",
+  "policy_device": "cpu",
+  "validation_backend": "cpu",
+  "num_envs": 1,
+  "ppo_n_steps": 64,
+  "actual_rollouts": 64,
+  "previous_checkpoint_rollouts": 0,
+  "total_checkpoint_rollouts": 64,
+  "resume_from": null,
+  "learning_rate": 0.003,
+  "sim_seconds_per_rollout": 5.0,
+  "mode": "baseline",
+  "wall_time_s": 6.55400013923645,
+  "algorithm": "PPO; one action per episode; gamma=0; six gait parameters",
+  "validation_seeds": [
+    900,
+    901,
+    902
+  ],
+  "target_speed_m_s": 0.25
+}

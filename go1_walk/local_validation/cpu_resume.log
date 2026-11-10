@@ -1,0 +1,3 @@
+improved: episodes=1024 validation_reward=0.441 best=0.441
+improved: episodes=1088 validation_reward=0.441 best=0.441
+improved: episodes=1088 validation_reward=0.423 best=0.441

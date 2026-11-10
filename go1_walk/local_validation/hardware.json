@@ -1,0 +1,40 @@
+{
+  "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "kernel": "6.6.87.2-microsoft-standard-WSL2",
+  "os_release": "PRETTY_NAME=\"Ubuntu 22.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"22.04\"\nVERSION=\"22.04.5 LTS (Jammy Jellyfish)\"\nVERSION_CODENAME=jammy\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=jammy\n",
+  "python": "3.10.12 (main, Jun 22 2026, 18:55:27) [GCC 11.4.0]",
+  "executable": "/home/junosby/rpb2025/.venv/bin/python",
+  "in_venv": true,
+  "wsl_kernel": true,
+  "windows_interop_registered": false,
+  "cuda_visible_devices": null,
+  "nvidia": {
+    "returncode": 0,
+    "stdout": "NVIDIA GeForce RTX 4050 Laptop GPU, 6141 MiB, 577.05",
+    "stderr": ""
+  },
+  "nvidia_full": {
+    "returncode": 0,
+    "stdout": "Tue Nov 10 13:34:50 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 575.65                 Driver Version: 577.05         CUDA Version: 12.9     |\n|-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 4050 ...    On  |   00000000:01:00.0 Off |                  N/A |\n| N/A   46C    P3             10W /   51W |       0MiB /   6141MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n                                                                                         \n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+",
+    "stderr": ""
+  },
+  "wsl_version": {
+    "error": "[Errno 8] Exec format error: 'wsl.exe'"
+  },
+  "windows_os": {
+    "error": "[Errno 8] Exec format error: 'powershell.exe'"
+  },
+  "packages": {
+    "torch": "2.6.0+cpu",
+    "mujoco": "3.17.0",
+    "mujoco-warp": "3.17.0",
+    "warp-lang": "1.19.0+cu12",
+    "stable-baselines3": "2.7.1",
+    "numpy": "2.2.6"
+  },
+  "torch_cuda_available": false,
+  "torch_cuda_build": null,
+  "warp_cuda_devices": [
+    "cuda:0"
+  ]
+}

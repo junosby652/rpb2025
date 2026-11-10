@@ -1,0 +1,20 @@
+{
+  "reference_12s": {
+    "frames": 300,
+    "duration_s": 12.0,
+    "bytes": 1627533,
+    "sha256": "5f1f0410db6ab1e4cad5858ba0bbc54b561e1af241179c028bebcba98f72257e"
+  },
+  "best_12s": {
+    "frames": 300,
+    "duration_s": 12.0,
+    "bytes": 1619177,
+    "sha256": "f03bd4e014b158693edf5724076d2516518f1da29e326d9799d507b75742a6b3"
+  },
+  "final_12s": {
+    "frames": 300,
+    "duration_s": 12.0,
+    "bytes": 1619177,
+    "sha256": "f03bd4e014b158693edf5724076d2516518f1da29e326d9799d507b75742a6b3"
+  }
+}

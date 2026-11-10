@@ -1,0 +1,11 @@
+mkdir -p failed for path /home/junosby/.config/matplotlib: [Errno 30] Read-only file system: '/home/junosby/.config'
+Matplotlib created a temporary cache directory at /tmp/matplotlib-lla99pzk because there was an issue with the default path (/home/junosby/.config/matplotlib); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+test_action_bounds (go1_walk.test_env.PhysicalEnvironmentTests) ... ok
+test_gymnasium_contract (go1_walk.test_env.PhysicalEnvironmentTests) ... ok
+test_kinematics_and_diagonal_phase (go1_walk.test_env.PhysicalEnvironmentTests) ... ok
+test_reproducible_physics_and_action_effect (go1_walk.test_env.PhysicalEnvironmentTests) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.880s
+
+OK

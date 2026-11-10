@@ -4,8 +4,9 @@
 
 ## 실행 환경과 설치
 
-- 검증 환경: Linux x86_64, Python 3.12, CPU. GPU가 없어 Isaac Sim / Isaac Lab / MuJoCo Warp는 사용하지 않았다.
-- 시뮬레이터: MuJoCo 4.0.0, 학습: Stable-Baselines3 PPO, PyTorch CPU.
+- RTX 4050 노트북의 WSL2 로컬 설치 및 CUDA 병렬 실행: [LOCAL_SETUP.md](LOCAL_SETUP.md).
+- 로컬 설치는 Python 3.10과 `requirements-local.lock`을 사용한다. 초기 실험의 Python 3.12 / MuJoCo 4.0.0 / PyTorch CPU 환경은 원본 `requirements.lock`에 보존했다.
+- `--backend cpu`는 물리와 PPO 모두 CPU, `--backend warp`는 CUDA 병렬 물리와 CPU PPO를 사용한다. 작은 정책의 GPU 학습 여부와 물리의 GPU 실행 여부를 구분한다.
 - 외부 로봇 모델 및 라이선스: [assets/SOURCE.md](assets/SOURCE.md).
 - 네트워크: 최초 설치 시 `download.pytorch.org`, `download-r2.pytorch.org`, `pypi.org`, `files.pythonhosted.org` 필요. 모델은 저장소에 포함되어 추가 다운로드하지 않는다. API 키 불필요.
 
@@ -17,7 +18,7 @@ source .venv/bin/activate
 python -m unittest go1_walk.test_env -v
 ```
 
-현재 클라우드에서는 이미 설치된 `/workspace/venvs/go1/bin/python`을 사용할 수 있다. 설치 위치를 바꾸려면 `GO1_VENV=/원하는/경로 bash go1_walk/setup.sh`를 실행한다. EGL 영상 렌더링에는 시스템 OpenGL/EGL 라이브러리가 필요하다. 현재 환경에서 렌더링까지 검증했다.
+설치 위치를 바꾸려면 `GO1_VENV=/원하는/경로 bash go1_walk/setup.sh`를 실행한다. Python 3.10의 venv 모듈이 없으면 `python3.10-venv`가 필요하다. EGL 영상 렌더링에는 시스템 OpenGL/EGL 라이브러리가 필요하다.
 
 ## 학습과 평가
 
@@ -25,6 +26,22 @@ python -m unittest go1_walk.test_env -v
 # 각 실험에 2,048개의 물리 롤아웃. 기존 결과를 보존하기 위해 새 경로 사용.
 python -m go1_walk.train --steps 2048 --seed 42 --output go1_walk/results_new
 MUJOCO_GL=egl python -m go1_walk.evaluate --results go1_walk/results_new
+```
+
+RTX 4050에서 CUDA 병렬 물리로 학습(6GB VRAM에서는 64개 환경부터 시작):
+
+```bash
+python -m go1_walk.train --backend warp --num-envs 64 --mode improved \
+  --steps 2048 --output go1_walk/results_warp_new
+```
+
+이 경로는 동일한 행동·관측·보상과 4ms 물리 / 20ms 제어 주기를 유지한다. 검증 체크포인트 선택은 CPU MuJoCo의 고정된 검증 시드로 진행한다. `--resume`으로 기존 CPU 정책을 GPU 물리 학습에 이어 쓸 수 있다. Warp는 float32이므로 CPU의 float64 궤적과 장시간 완전히 일치하지 않을 수 있다. 요청한 `--steps`는 병렬 환경 수 × PPO rollout 길이의 배수로 올림하며 실제 횟수와 장치를 `config.json`에 기록한다. CUDA 접근에 실패하면 오류를 내며 CPU로 자동 대체하지 않는다.
+
+`improved`만 학습한 결과의 영상·비교 평가는 다음 명령으로 생성한다. 새 출력 폴더를 지정해야 한다. 기존 CPU best와 이번 best/final을 같은 CPU MuJoCo에서 새 시드 3000~3019로 12초·60초 평가하고, 12초 MP4 세 개와 CSV·JSON·그래프·한국어 보고서를 만든다. 기존 `evaluate` 명령은 baseline과 improved가 모두 있는 결과 폴더용이다.
+
+```bash
+python -m go1_walk.assess --results go1_walk/results_warp_new \
+  --output go1_walk/results_warp_new/assessment_new
 ```
 
 기존 학습 결과만 재평가:

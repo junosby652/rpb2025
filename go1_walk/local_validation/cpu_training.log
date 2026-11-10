@@ -1,0 +1,6 @@
+baseline: episodes=0 validation_reward=0.072 best=0.072
+baseline: episodes=64 validation_reward=0.072 best=0.072
+baseline: episodes=64 validation_reward=0.172 best=0.172
+improved: episodes=0 validation_reward=-0.086 best=-0.086
+improved: episodes=64 validation_reward=-0.086 best=-0.086
+improved: episodes=64 validation_reward=0.072 best=0.072

@@ -1,0 +1,90 @@
+[
+  {
+    "checkpoint": "go1_walk/results/baseline/best.zip",
+    "checkpoint_rollouts": 896,
+    "distance_m": 3.9838617255544864,
+    "speed_m_s": 0.7967723451108972,
+    "lateral_drift_m": -0.49265135972485485,
+    "survived_s": 5.0,
+    "fell": false,
+    "energy_J": 2616.153335849979,
+    "mean_power_W": 523.2306671699959,
+    "mean_tilt": 0.009150979714050893,
+    "tracking_score": 0.025156734253585892,
+    "reward": -0.9084470870369308,
+    "parameters": {
+      "stride_m": 0.17,
+      "frequency_hz": 2.8,
+      "leg_length_m": 0.245,
+      "clearance_m": 0.075,
+      "foot_offset_m": -0.045,
+      "stance_fraction": 0.5
+    }
+  },
+  {
+    "checkpoint": "go1_walk/results/improved/best.zip",
+    "checkpoint_rollouts": 1024,
+    "distance_m": 1.102463628308574,
+    "speed_m_s": 0.2204927256617148,
+    "lateral_drift_m": 0.02371678529598159,
+    "survived_s": 5.0,
+    "fell": false,
+    "energy_J": 1470.4851199228247,
+    "mean_power_W": 294.09702398456494,
+    "mean_tilt": 0.008018141787963805,
+    "tracking_score": 0.8881967510611977,
+    "reward": 0.3984412470356336,
+    "parameters": {
+      "stride_m": 0.13069469451904298,
+      "frequency_hz": 1.5687148928642274,
+      "leg_length_m": 0.2776250702142715,
+      "clearance_m": 0.05253896713256836,
+      "foot_offset_m": -0.02287578284740448,
+      "stance_fraction": 0.6165261280536651
+    }
+  },
+  {
+    "checkpoint": "go1_walk/results_extended/improved/best.zip",
+    "checkpoint_rollouts": 1024,
+    "distance_m": 1.102463628308574,
+    "speed_m_s": 0.2204927256617148,
+    "lateral_drift_m": 0.02371678529598159,
+    "survived_s": 5.0,
+    "fell": false,
+    "energy_J": 1470.4851199228247,
+    "mean_power_W": 294.09702398456494,
+    "mean_tilt": 0.008018141787963805,
+    "tracking_score": 0.8881967510611977,
+    "reward": 0.3984412470356336,
+    "parameters": {
+      "stride_m": 0.13069469451904298,
+      "frequency_hz": 1.5687148928642274,
+      "leg_length_m": 0.2776250702142715,
+      "clearance_m": 0.05253896713256836,
+      "foot_offset_m": -0.02287578284740448,
+      "stance_fraction": 0.6165261280536651
+    }
+  },
+  {
+    "checkpoint": "go1_walk/results_extended/improved/final.zip",
+    "checkpoint_rollouts": 5120,
+    "distance_m": 1.109468219593197,
+    "speed_m_s": 0.22189364391863942,
+    "lateral_drift_m": -0.027503366077976574,
+    "survived_s": 5.0,
+    "fell": false,
+    "energy_J": 1382.639540142636,
+    "mean_power_W": 276.5279080285272,
+    "mean_tilt": 0.007625191233440244,
+    "tracking_score": 0.8795878190671627,
+    "reward": 0.416598006195992,
+    "parameters": {
+      "stride_m": 0.12389180183410645,
+      "frequency_hz": 1.6305147051811217,
+      "leg_length_m": 0.30077878952026366,
+      "clearance_m": 0.04725226879119873,
+      "foot_offset_m": -0.03240519672632217,
+      "stance_fraction": 0.5937518119812012
+    }
+  }
+]
